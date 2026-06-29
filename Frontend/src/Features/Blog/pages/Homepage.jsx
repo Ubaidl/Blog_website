@@ -9,41 +9,41 @@ const Homepage = () => {
 
   useEffect(() => {
     handlegetallblogs();
-     console.log("Fetching blogs...");
+    console.log("Fetching blogs...");
   }, []);
 
   return (
     <>
-      <Navbar/>
- 
-    <div className="homepage">
+      <Navbar />
 
-      <header className="hero">
-        <h1>AI Blog Generator</h1>
-        <p>Create and explore AI-generated blogs in seconds.</p>
-      </header>
+      <div className="homepage">
 
-      <div className="blog-grid">
-        {blog.map((item) => (
-          <div className="blog-card" key={item._id}>
-            <img
-              src={`http://localhost:4000${item.image}`}
-              alt={item.title}
-            />
+        <header className="hero">
+          <h1>AI Blog Generator</h1>
+          <p>Create and explore AI-generated blogs in seconds.</p>
+        </header>
 
-            <div className="card-content">
-              <h2>{item.title}</h2>
+        <div className="blog-grid">
+          {blog.map((item) => (
+            <div className="blog-card" key={item._id}>
+              <img
+                src={`${import.meta.env.VITE_API_URL}${item.image}`}
+                alt={item.title}
+              />
 
-              <p>{item.content}</p>
+              <div className="card-content">
+                <h2>{item.title}</h2>
+
+                <p>{item.content}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
       </div>
 
-    </div>
-  
     </>
-    
+
   )
 };
 
