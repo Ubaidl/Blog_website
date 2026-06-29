@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useblog } from "../hooks/useblog";
-import "../style2/MyBlogs.scss"
+import "../style2/MyBlogs.scss";
 
 const MyBlogs = () => {
   const { myBlogs, handleGetMyBlogs } = useblog();
@@ -21,14 +21,15 @@ const MyBlogs = () => {
         <div className="blog-grid">
           {myBlogs.map((blog) => (
             <div className="blog-card" key={blog._id}>
-              <img
-                src={`http://localhost:4000${blog.image}`}
-                alt={blog.title}
-              />
+              {blog.image && (
+                <img
+                  src={`${import.meta.env.VITE_API_URL}${blog.image}`}
+                  alt={blog.title}
+                />
+              )}
 
               <div className="card-content">
                 <h2>{blog.title}</h2>
-
                 <p>{blog.content}</p>
               </div>
             </div>
