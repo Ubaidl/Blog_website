@@ -33,17 +33,18 @@ export const useblog = () => {
 
   // Get All Blogs
   const handlegetallblogs = async () => {
-    try {
-      const data = await getallblogs();
+  try {
+    const data = await getallblogs();
 
-      setblog(data.blogs);
+    console.log("API Response:", data);
 
-      return data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+    setblog(data.blogs || []);
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // Get My Blogs
   const handleGetMyBlogs = async () => {

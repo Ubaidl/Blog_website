@@ -6,6 +6,7 @@ import Navbar from "../../auth/pages/Navber";
 
 const Homepage = () => {
   const { blog, handlegetallblogs } = useblog();
+  console.log("Blog:", blog);
 
   useEffect(() => {
     handlegetallblogs();
@@ -24,7 +25,7 @@ const Homepage = () => {
         </header>
 
         <div className="blog-grid">
-          {blog.map((item) => (
+          {(blog || []).map((item) => (
             <div className="blog-card" key={item._id}>
               <img
                 src={`${import.meta.env.VITE_API_URL}${item.image}`}

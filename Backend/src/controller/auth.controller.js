@@ -73,16 +73,21 @@ const loginuser = async (req,res)=>{
       { expiresIn: "10h" }
     );
 
-    res.cookie("token", token);
-    return res.status(200).json({
-        message: "loggin successful",
-        token,
-        user:{
-            id: user._id,
-            username: user.username,
-            email:user.email
-        }
-    })
+    res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 10 * 60 * 60 * 1000,
+});
+
+return res.status(200).json({
+  message: "Login successful",
+  user: {
+    id: user._id,
+    username: user.username,
+    email: user.email,
+  },
+});
         
     } catch (error) {
         res.status(500).json({ message: error.message });

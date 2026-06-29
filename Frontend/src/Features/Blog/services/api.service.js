@@ -13,7 +13,7 @@ export const createblog = async ({ title, image }) => {
       formData.append("image", image);
     }
 
-    const response = await axios.post(`${api}/create`, formData, {
+    const response = await axios.post(`${api}/createblog`, formData, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -55,7 +55,7 @@ export const getblogbyid = async (id) => {
 // Get My Blogs
 export const getMyBlogs = async () => {
   try {
-    const response = await axios.get(`${api}/my-blogs`, {
+    const response = await axios.get(`${api}/myblogs`, {
       withCredentials: true,
     });
 
