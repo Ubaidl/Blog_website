@@ -1,0 +1,71 @@
+import { useContext } from "react";
+import { BlogContext } from "../Blog.context";
+import {
+  createblog,
+  getallblogs,
+  getMyBlogs,
+} from "../services/api.service";
+
+export const useblog = () => {
+  const context = useContext(BlogContext);
+
+  const {
+    blog,
+    setblog,
+    myBlogs,
+    setMyBlogs,
+  } = context;
+
+  // Create Blog
+  const handlecreateblog = async ({ title, image }) => {
+    try {
+      const data = await createblog({
+        title,
+        image,
+      });
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  // Get All Blogs
+  const handlegetallblogs = async () => {
+    try {
+      const data = await getallblogs();
+
+      setblog(data.blogs);
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  // Get My Blogs
+  const handleGetMyBlogs = async () => {
+  try {
+    const data = await getMyBlogs();
+
+    console.log("API Response:", data);
+
+    setMyBlogs(data.blogs);
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+  return {
+    blog,
+    myBlogs,
+    handlecreateblog,
+    handlegetallblogs,
+    handleGetMyBlogs,
+  };
+};
