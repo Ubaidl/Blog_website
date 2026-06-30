@@ -23,7 +23,7 @@ const MyBlogs = () => {
             <div className="blog-card" key={blog._id}>
               {blog.image && (
                 <img
-                  src={`${import.meta.env.VITE_API_URL}${blog.image}`}
+                  src={blog.image}
                   alt={blog.title}
                 />
               )}

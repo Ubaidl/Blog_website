@@ -15,7 +15,7 @@ const createblog = async (req, res) => {
     let imagepath = "";
 
     if (req.file) {
-      imagepath = `/uploads/${req.file.filename}`;
+      imagepath =req.file.path;
     }
 
     const response = await generateBlog(title);
