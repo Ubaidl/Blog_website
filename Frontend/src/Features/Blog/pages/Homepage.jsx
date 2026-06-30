@@ -27,7 +27,7 @@ const Homepage = () => {
         <div className="blog-grid">
           {(blog || []).map((item) => (
             <div className="blog-card" key={item._id}>
-              <p>{item.image}</p>
+              {/* <p>{item.image}</p> */}
 
   <img
     src={item.image}
