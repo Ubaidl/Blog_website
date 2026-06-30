@@ -1,5 +1,7 @@
 import { Blogmodel } from "../models/blog.model.js";
 import generateBlog from "../aiservice/api.service.js";
+import cloudinary from "../config/cloudinary.js";
+import fs from "fs";
 
 
 const createblog = async (req, res) => {
@@ -15,7 +17,15 @@ const createblog = async (req, res) => {
     let imagepath = "";
 
     if (req.file) {
-      imagepath =req.file.path;
+      // Upload image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "blog-images",
+      });
+
+      imagepath = result.secure_url;
+
+      // Delete local file after successful upload
+      fs.unlinkSync(req.file.path);
     }
 
     const response = await generateBlog(title);
@@ -26,12 +36,12 @@ const createblog = async (req, res) => {
       image: imagepath,
       user: req.user.id,
     });
-    console.log("Saved Blog  haaaa:", blog);
 
     return res.status(201).json({
       message: "Blog created successfully",
       blog,
     });
+
   } catch (error) {
     console.log(error);
 
