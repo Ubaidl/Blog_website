@@ -3,7 +3,6 @@ import generateBlog from "../aiservice/api.service.js";
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
 
-
 const createblog = async (req, res) => {
   try {
     const { title } = req.body;
@@ -29,10 +28,18 @@ const createblog = async (req, res) => {
         imagepath = result.secure_url;
 
         // Delete local file after uploading
-        fs.unlinkSync(req.file.path);
+        if (fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
 
       } catch (err) {
-        console.error("Cloudinary Upload Error:", err);
+        console.error("Cloudinary Upload Error:", {
+          message: err.message,
+          http_code: err.http_code,
+          error: err.error,
+          name: err.name,
+          stack: err.stack,
+        });
 
         if (req.file && fs.existsSync(req.file.path)) {
           fs.unlinkSync(req.file.path);
@@ -40,7 +47,6 @@ const createblog = async (req, res) => {
 
         return res.status(500).json({
           message: "Cloudinary upload failed",
-          error: err,
         });
       }
     }
@@ -69,71 +75,82 @@ const createblog = async (req, res) => {
     });
   }
 };
-const getblogbyid = async(req,res)=>{
-  try {
-    const {id} = req.params;
 
-    const blog =  await Blogmodel.findById(id);
-    if(!blog){
-      return res.status(404).json({ message: 'Blog not found' });
+const getblogbyid = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const blog = await Blogmodel.findById(id);
+
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
     }
-     res.status(200).json(blog);
-    
+
+    res.status(200).json(blog);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
-    
+    res.status(500).json({
+      message: error.message,
+    });
   }
-}
-const getallblogs = async (req,res)=>{
+};
+
+const getallblogs = async (req, res) => {
   try {
     const blogs = await Blogmodel.find().sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
       count: blogs.length,
       blogs,
     });
-    
+
   } catch (error) {
-     res.status(500).json({
+    res.status(500).json({
       success: false,
       message: error.message,
     });
-    
   }
 };
-const deleteblog = async (req,res)=>{
-  try {
-    const {id} = req.params
-    const blog = await Blogmodel.findById(id)
 
-    if(!blog){
-      return res.status(404).json({ message: 'Blog not found' });
-
-    }
-    await Blogmodel.findByIdAndDelete(blog)
-    res.status(200).json({ message: 'Blog deleted successfully' });
-
-    
-  } catch (error) {
-     res.status(500).json({ message: error.message })
-    
-  }
-
-}
-const updateblog = async (req, res) => {
+const deleteblog = async (req, res) => {
   try {
     const { id } = req.params;
 
-    console.log(req.body);
+    const blog = await Blogmodel.findById(id);
+
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
+    }
+
+    await Blogmodel.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "Blog deleted successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const updateblog = async (req, res) => {
+  try {
+    const { id } = req.params;
 
     const updatedblog = await Blogmodel.findByIdAndUpdate(
       id,
       req.body,
       {
-    returnDocument: "after",   // ← return updated blog
-    runValidators: true,       // ← check validation rules,like strng,requred,
-  }
-
+        returnDocument: "after",
+        runValidators: true,
+      }
     );
 
     if (!updatedblog) {
@@ -143,8 +160,8 @@ const updateblog = async (req, res) => {
     }
 
     res.status(200).json(updatedblog);
+
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: error.message,
     });
@@ -161,6 +178,7 @@ const getMyBlogs = async (req, res) => {
       success: true,
       blogs,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -169,4 +187,11 @@ const getMyBlogs = async (req, res) => {
   }
 };
 
-export { createblog ,getallblogs,getblogbyid,deleteblog,updateblog,getMyBlogs};
+export {
+  createblog,
+  getallblogs,
+  getblogbyid,
+  deleteblog,
+  updateblog,
+  getMyBlogs,
+};
