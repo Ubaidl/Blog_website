@@ -27,10 +27,12 @@ const Homepage = () => {
         <div className="blog-grid">
           {(blog || []).map((item) => (
             <div className="blog-card" key={item._id}>
-              <img
-                src={`${import.meta.env.VITE_API_URL}${item.image}`}
-                alt={item.title}
-              />
+              <p>{item.image}</p>
+
+  <img
+    src={item.image}
+    alt={item.title}
+  />
 
               <div className="card-content">
                 <h2>{item.title}</h2>
