@@ -17,15 +17,32 @@ const createblog = async (req, res) => {
     let imagepath = "";
 
     if (req.file) {
-      // Upload image to Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "blog-images",
-      });
+      try {
+        console.log("Uploading image to Cloudinary...");
 
-      imagepath = result.secure_url;
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "blog-images",
+        });
 
-      // Delete local file after successful upload
-      fs.unlinkSync(req.file.path);
+        console.log("Cloudinary Upload Success:", result);
+
+        imagepath = result.secure_url;
+
+        // Delete local file after uploading
+        fs.unlinkSync(req.file.path);
+
+      } catch (err) {
+        console.error("Cloudinary Upload Error:", err);
+
+        if (req.file && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+
+        return res.status(500).json({
+          message: "Cloudinary upload failed",
+          error: err,
+        });
+      }
     }
 
     const response = await generateBlog(title);
@@ -37,13 +54,15 @@ const createblog = async (req, res) => {
       user: req.user.id,
     });
 
+    console.log("Blog saved successfully:", blog);
+
     return res.status(201).json({
       message: "Blog created successfully",
       blog,
     });
 
   } catch (error) {
-    console.log(error);
+    console.error("Create Blog Error:", error);
 
     return res.status(500).json({
       message: error.message,
