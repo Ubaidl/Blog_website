@@ -68,16 +68,18 @@ export const getMyBlogs = async () => {
 // Delete Blog
 export const deleteBlog = async (id) => {
   try {
-    const response = await axios.delete(`${api}/${id}`, {
-      withCredentials: true,
-    });
+    const response = await axios.delete(
+      `${api}/deleteblog/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
 
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
   }
 };
-
 // Update Blog
 export const updateBlog = async (id, data) => {
   try {

@@ -127,6 +127,13 @@ const deleteblog = async (req, res) => {
       });
     }
 
+    // Check if the logged-in user is the owner
+    if (blog.user.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "You are not authorized to delete this blog",
+      });
+    }
+
     await Blogmodel.findByIdAndDelete(id);
 
     res.status(200).json({
@@ -139,7 +146,6 @@ const deleteblog = async (req, res) => {
     });
   }
 };
-
 const updateblog = async (req, res) => {
   try {
     const { id } = req.params;

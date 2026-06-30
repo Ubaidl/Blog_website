@@ -4,6 +4,7 @@ import {
   createblog,
   getallblogs,
   getMyBlogs,
+  deleteBlog,
 } from "../services/api.service";
 
 export const useblog = () => {
@@ -61,6 +62,20 @@ export const useblog = () => {
     throw error;
   }
 };
+const handleDelete = async (id) => {
+  try {
+    await deleteBlog(id);
+
+    setMyBlogs((prev) => prev.filter((blog) => blog._id !== id));
+
+    alert("Blog deleted successfully");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
 
   return {
     blog,
@@ -68,5 +83,6 @@ export const useblog = () => {
     handlecreateblog,
     handlegetallblogs,
     handleGetMyBlogs,
+    handleDelete,
   };
 };

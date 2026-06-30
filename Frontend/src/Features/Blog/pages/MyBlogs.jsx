@@ -3,7 +3,11 @@ import { useblog } from "../hooks/useblog";
 import "../style2/MyBlogs.scss";
 
 const MyBlogs = () => {
-  const { myBlogs, handleGetMyBlogs } = useblog();
+  const {
+    myBlogs,
+    handleGetMyBlogs,
+    handleDelete,
+  } = useblog();
 
   useEffect(() => {
     handleGetMyBlogs();
@@ -31,6 +35,13 @@ const MyBlogs = () => {
               <div className="card-content">
                 <h2>{blog.title}</h2>
                 <p>{blog.content}</p>
+
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDelete(blog._id)}
+                >
+                  Delete Blog
+                </button>
               </div>
             </div>
           ))}
